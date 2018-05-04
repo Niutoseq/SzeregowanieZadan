@@ -1,27 +1,27 @@
 import java.util.ArrayList;
 
-public class Task
+public class Task //implements Comparable<Task>
 {
-  private int taskNumber;         // numer zadania
-  private int minTime;            // czas najwcześniej możliwy
-  private int maxTime;            // czas najpóźniej dopuszczalny
-  private ArrayList<Task> previousTasks;   // zadania, od których aktualne jest zależne
-  private ArrayList<Task> nextTasks;       // zadania zależne od aktualnego
+  private int taskNumber;                  // numer zadania
+  private int duration;                    // czas trwania zadania
+  private int startTime;                   // czas rozpoczęcia
+  private int finishTime;                  // czas zakończenia
+  private ArrayList<Task> connectedTasks;  // zadania powiązane
 
   public Task()
   {
     super();
   }
 
-  public Task(int taskNumber, int minTime, int maxTime,
-              ArrayList<Task> previousTasks, ArrayList<Task> nextTasks)
+  public Task(int taskNumber, int duration, int startTime,
+              int finishTime, ArrayList<Task> connectedTasks)
   {
     super();
     this.taskNumber = taskNumber;
-    this.minTime = minTime;
-    this.maxTime = maxTime;
-    this.previousTasks = previousTasks;
-    this.nextTasks = nextTasks;
+    this.duration = duration;
+    this.startTime = startTime;
+    this.finishTime = finishTime;
+    this.connectedTasks = connectedTasks;
   }
 
   public int getTaskNumber()
@@ -33,39 +33,39 @@ public class Task
 		this.taskNumber = taskNumber;
 	}
 
-  public int getMinTime()
+  public int getDuration()
   {
-    return minTime;
+    return duration;
   }
-  public void setMinTime(int minTime)
+  public void setDuration(int duration)
   {
-    this.minTime = minTime;
-  }
-
-  public int getMaxTime()
-  {
-    return maxTime;
-  }
-  public void setMaxTime(int maxTime)
-  {
-    this.maxTime = maxTime;
+    this.duration = duration;
   }
 
-  public ArrayList<Task> getPreviousTasks()
+  public int getStartTime()
   {
-    return previousTasks;
+    return startTime;
   }
-  public void setPreviousTasks(ArrayList<Task> previousTasks)
+  public void setStartTime(int startTime)
   {
-    this.previousTasks = previousTasks;
+    this.startTime = startTime;
   }
 
-  public ArrayList<Task> getNextTasks()
+  public int getFinishTime()
   {
-    return nextTasks;
+    return finishTime;
   }
-  public void setNextTasks(ArrayList<Task> nextTasks)
+  public void setFinishTime(int finishTime)
   {
-    this.nextTasks = nextTasks;
+    this.finishTime = finishTime;
+  }
+
+  public ArrayList<Task> getConnectedTasks()
+  {
+    return connectedTasks;
+  }
+  public void setConnectedTasks(ArrayList<Task> connectedTasks)
+  {
+    this.connectedTasks = connectedTasks;
   }
 }
