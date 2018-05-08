@@ -13,9 +13,23 @@ public class TaskManager
 
   public static void addConnection(Task firstTask, Task secondTask)
   {
+    if (firstTask.getTaskNumber() == secondTask.getTaskNumber())
+    {
+      System.out.println("[Task" + firstTask.getTaskNumber() + "]: Nie można utworzyć powiązania zadania z samym sobą!");
+      App.displayFrame();
+      System.exit(0);
+    }
+
+    if (firstTask.getTaskNumber() < secondTask.getTaskNumber())
+    {
+      System.out.println("[Task" + firstTask.getTaskNumber() + "]: Zadanie o numerze wyższym nie może poprzedzać numeru niższego!");
+      App.displayFrame();
+      System.exit(0);
+    }
+
     for (Task task : tasks)
     {
-      if (task == firstTask)
+      if (task.getTaskNumber() == firstTask.getTaskNumber())
       {
         firstTask.getConnectedTasks().add(secondTask);
         secondTask.getNextTasks().add(firstTask);
@@ -32,7 +46,6 @@ public class TaskManager
   {
     System.out.println("SCHEME:");
     System.out.println("[Task no. <num>] <duration>, <start>, <finish>, {<prevTasks>}, {<nextTasks>}");
-    // System.out.print("\n");
   }
 
   public static void displayAllTasks()
@@ -67,7 +80,6 @@ public class TaskManager
         {
           System.out.print("empty");
         }
-
         System.out.print(", ");
 
         // zadania zależne od obecnego zadania
@@ -90,26 +102,14 @@ public class TaskManager
         {
           System.out.print("empty");
         }
-
         System.out.print("\n");
       }
     }
     else
     {
       System.out.println("No tasks to be displayed.");
-    }
-  }
-
-  public static void assignNumbersToTasks()
-  {
-    int i = 1;
-    int numberOfTasks = tasks.size();
-
-    // nadanie numerów "po kolei"
-    for (Task task : tasks)
-    {
-      task.setTaskNumber(i);
-      i++;
+      App.displayFrame();
+      System.exit(0);
     }
   }
 
@@ -146,50 +146,8 @@ public class TaskManager
     }
   }
 
-  public static void findCriticalPath(ArrayList<Task> tasksToPath)
-  {
-    int criticalPath = 0;
-    String criticalPathString = new String();
-
-    for (Task task : tasksToPath)
-    {
-      if (criticalPath < task.getFinishTime())
-      {
-        criticalPath = task.getFinishTime();
-        // System.out.println("Z" + task.getTaskNumber());
-        criticalPathString = criticalPathString + "Z" + task.getTaskNumber() + " ";
-      }
-    }
-    System.out.println("[Critical Path String]: " + criticalPathString);
-    System.out.println("[Critical Path Time]:   " + criticalPath);
-  }
-
-  public static ArrayList<Task> getAllRootElements(ArrayList<Task> tasksToRoot)
-  {
-    ArrayList<Task> rootElements = new ArrayList<Task>();
-    for (Task task : tasksToRoot)
-    {
-      if (task.getConnectedTasks().isEmpty())
-      {
-        rootElements.add(task);
-      }
-    }
-    return rootElements;
-  }
-
-  public static void criticalPath(ArrayList<Task> tasksToPath, String indent)
-  {
-    for (Task task : tasksToPath)
-    {
-      // System.out.println(indent + "Z" + task.getTaskNumber() + "[" + task.getConnectedTasks().isEmpty() + "]");
-      System.out.println(indent + "Z" + task.getTaskNumber() + "[" + task.getFinishTime() + "]");
-      // System.out.print(task.getNextTasks().isEmpty() ? "\n" : "");
-      criticalPath(task.getNextTasks(), indent + "  ");
-    }
-  }
-
-  // TA WERSJA CHYBA NAJLEPSZA, POTESTOWAĆ I SIĘ UPEWNIĆ !!!!!
-  public static void criticalPath2(ArrayList<Task> tasksToPath, ArrayList<Task> finalPath)
+  // wyznaczanie ścieżki krytycznej
+  public static void findCriticalPath(ArrayList<Task> tasksToPath, ArrayList<Task> finalPath)
   {
     Task maxTask = new Task();
     for (Task task : tasksToPath)
@@ -202,55 +160,30 @@ public class TaskManager
     finalPath.add(maxTask);
     if (!maxTask.getConnectedTasks().isEmpty())
     {
-      criticalPath2(maxTask.getConnectedTasks(), finalPath);
+      findCriticalPath(maxTask.getConnectedTasks(), finalPath);
     }
   }
 
+  // wyświetlanie ścieżki krytycznej
   public static void criticalPathDisplayer(ArrayList<Task> tasksToPath)
   {
-    ArrayList<Task> rootElements = getAllRootElements(tasksToPath);
     ArrayList<Task> cp = new ArrayList<Task>();
-    // criticalPath(rootElements, "");
-    criticalPath2(tasksToPath, cp);
+    findCriticalPath(tasksToPath, cp);
     System.out.println("[Critical Path Time]:   " + cp.get(0).getFinishTime());
 
     Collections.reverse(cp);
     System.out.print("[Critical Path String]: ");
+    int x = 0;
     for (Task task : cp)
     {
-      System.out.print("Z" + task.getTaskNumber() + " ");
+      if (x == cp.size()-1)
+      {
+        System.out.print("Z" + task.getTaskNumber());
+        break;
+      }
+      System.out.print("Z" + task.getTaskNumber() + " -> ");
+      x++;
     }
     System.out.print("\n");
-  }
-
-  // sprawdzić i wprowadzić adekwatne poprawki !!!!!
-  public static String displayCriticalPathControler(ArrayList<Task> tasksToPath)
-  {
-    Collections.reverse(tasksToPath);
-    for (Task task : tasksToPath)
-    {
-      return task.getTaskNumber() + "Z " + displayCriticalPathControler(task.getConnectedTasks());
-    }
-    return "";
-  }
-
-  public static void displayCriticalPath(ArrayList<Task> tasksToPath)
-  {
-    String result = TaskManager.displayCriticalPathControler(tasksToPath);
-    String output = new StringBuilder(result).reverse().toString();
-    // System.out.println("[Critical Path]:" + output);
-  }
-
-  public static void displayAllPaths(ArrayList<Task> tasksToPath, String indent)
-  {
-    // startTask.setExplored(true);
-    for (Task task : tasksToPath)
-    {
-      System.out.println(indent + "Task" + task.getTaskNumber() + "[" + task.getDuration() + "]" + "[" + task.getStartTime() + "," + task.getFinishTime() + "]");
-      if (task.getConnectedTasks() != null)
-      {
-        displayAllPaths(task.getConnectedTasks(), indent + "_______");
-      }
-    }
   }
 }
