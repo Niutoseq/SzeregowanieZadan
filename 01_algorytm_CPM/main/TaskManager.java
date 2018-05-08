@@ -17,7 +17,8 @@ public class TaskManager
     {
       if (task == firstTask)
       {
-        task.getConnectedTasks().add(secondTask);
+        firstTask.getConnectedTasks().add(secondTask);
+        secondTask.getNextTasks().add(firstTask);
       }
     }
   }
@@ -27,14 +28,17 @@ public class TaskManager
     return tasks;
   }
 
+  public static void displayTasksScheme()
+  {
+    System.out.println("SCHEME:");
+    System.out.println("[Task no. <num>] <duration>, <start>, <finish>, {<prevTasks>}, {<nextTasks>}");
+    // System.out.print("\n");
+  }
+
   public static void displayAllTasks()
   {
     if (!tasks.isEmpty())
     {
-      System.out.println("SCHEME:");
-      System.out.println("[Task no. <number>] <duration>, <startTime>, <finishTime>, {<connectedTasks>}");
-      System.out.print("\n");
-
       System.out.println("TASKS:");
       for (Task task : tasks)
       {
@@ -43,6 +47,7 @@ public class TaskManager
           + task.getStartTime() + ", "
           + task.getFinishTime() + ", ");
 
+        // zadania, od których obecne jest zależne
         if (!task.getConnectedTasks().isEmpty())
         {
           System.out.print("{");
@@ -62,6 +67,30 @@ public class TaskManager
         {
           System.out.print("empty");
         }
+
+        System.out.print(", ");
+
+        // zadania zależne od obecnego zadania
+        if (!task.getNextTasks().isEmpty())
+        {
+          System.out.print("{");
+          int i = 0;
+          for (Task nextTask : task.getNextTasks())
+          {
+            if (i++ == task.getNextTasks().size() - 1)
+            {
+              System.out.print(nextTask.getTaskNumber());
+              break;
+            }
+            System.out.print(nextTask.getTaskNumber() + ", ");
+          }
+          System.out.print("}");
+        }
+        else
+        {
+          System.out.print("empty");
+        }
+
         System.out.print("\n");
       }
     }
@@ -117,29 +146,111 @@ public class TaskManager
     }
   }
 
-  public static void findCriticalPath()
+  public static void findCriticalPath(ArrayList<Task> tasksToPath)
   {
     int criticalPath = 0;
+    String criticalPathString = new String();
 
-    for (Task task : tasks)
+    for (Task task : tasksToPath)
     {
       if (criticalPath < task.getFinishTime())
       {
         criticalPath = task.getFinishTime();
+        // System.out.println("Z" + task.getTaskNumber());
+        criticalPathString = criticalPathString + "Z" + task.getTaskNumber() + " ";
       }
     }
+    System.out.println("[Critical Path String]: " + criticalPathString);
+    System.out.println("[Critical Path Time]:   " + criticalPath);
+  }
 
-    System.out.println("[Critical Path Time]: " + criticalPath);
+  public static ArrayList<Task> getAllRootElements(ArrayList<Task> tasksToRoot)
+  {
+    ArrayList<Task> rootElements = new ArrayList<Task>();
+    for (Task task : tasksToRoot)
+    {
+      if (task.getConnectedTasks().isEmpty())
+      {
+        rootElements.add(task);
+      }
+    }
+    return rootElements;
+  }
+
+  public static void criticalPath(ArrayList<Task> tasksToPath, String indent)
+  {
+    for (Task task : tasksToPath)
+    {
+      // System.out.println(indent + "Z" + task.getTaskNumber() + "[" + task.getConnectedTasks().isEmpty() + "]");
+      System.out.println(indent + "Z" + task.getTaskNumber() + "[" + task.getFinishTime() + "]");
+      // System.out.print(task.getNextTasks().isEmpty() ? "\n" : "");
+      criticalPath(task.getNextTasks(), indent + "  ");
+    }
+  }
+
+  // TA WERSJA CHYBA NAJLEPSZA, POTESTOWAĆ I SIĘ UPEWNIĆ !!!!!
+  public static void criticalPath2(ArrayList<Task> tasksToPath, ArrayList<Task> finalPath)
+  {
+    Task maxTask = new Task();
+    for (Task task : tasksToPath)
+    {
+      if (task.getFinishTime() > maxTask.getFinishTime())
+      {
+        maxTask = task;
+      }
+    }
+    finalPath.add(maxTask);
+    if (!maxTask.getConnectedTasks().isEmpty())
+    {
+      criticalPath2(maxTask.getConnectedTasks(), finalPath);
+    }
+  }
+
+  public static void criticalPathDisplayer(ArrayList<Task> tasksToPath)
+  {
+    ArrayList<Task> rootElements = getAllRootElements(tasksToPath);
+    ArrayList<Task> cp = new ArrayList<Task>();
+    // criticalPath(rootElements, "");
+    criticalPath2(tasksToPath, cp);
+    System.out.println("[Critical Path Time]:   " + cp.get(0).getFinishTime());
+
+    Collections.reverse(cp);
+    System.out.print("[Critical Path String]: ");
+    for (Task task : cp)
+    {
+      System.out.print("Z" + task.getTaskNumber() + " ");
+    }
+    System.out.print("\n");
   }
 
   // sprawdzić i wprowadzić adekwatne poprawki !!!!!
-  public static String displayCriticalPath(ArrayList<Task> tasksToPath)
+  public static String displayCriticalPathControler(ArrayList<Task> tasksToPath)
   {
     Collections.reverse(tasksToPath);
     for (Task task : tasksToPath)
     {
-      return task.getTaskNumber() + "Z" + " >- " + displayCriticalPath(task.getConnectedTasks());
+      return task.getTaskNumber() + "Z " + displayCriticalPathControler(task.getConnectedTasks());
     }
-    return "]MPC[";
+    return "";
+  }
+
+  public static void displayCriticalPath(ArrayList<Task> tasksToPath)
+  {
+    String result = TaskManager.displayCriticalPathControler(tasksToPath);
+    String output = new StringBuilder(result).reverse().toString();
+    // System.out.println("[Critical Path]:" + output);
+  }
+
+  public static void displayAllPaths(ArrayList<Task> tasksToPath, String indent)
+  {
+    // startTask.setExplored(true);
+    for (Task task : tasksToPath)
+    {
+      System.out.println(indent + "Task" + task.getTaskNumber() + "[" + task.getDuration() + "]" + "[" + task.getStartTime() + "," + task.getFinishTime() + "]");
+      if (task.getConnectedTasks() != null)
+      {
+        displayAllPaths(task.getConnectedTasks(), indent + "_______");
+      }
+    }
   }
 }

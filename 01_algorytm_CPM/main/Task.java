@@ -1,12 +1,13 @@
 import java.util.ArrayList;
 
-public class Task //implements Comparable<Task>
+public class Task
 {
   private int taskNumber;                  // numer zadania
   private int duration;                    // czas trwania zadania
   private int startTime;                   // czas rozpoczęcia
   private int finishTime;                  // czas zakończenia
-  private ArrayList<Task> connectedTasks;  // zadania powiązane
+  private ArrayList<Task> connectedTasks;  // zadania, od których obecne jest zależne
+  private ArrayList<Task> nextTasks;       // zadania zależne od obecnego zadania
 
   public Task()
   {
@@ -14,7 +15,8 @@ public class Task //implements Comparable<Task>
   }
 
   public Task(int taskNumber, int duration, int startTime,
-              int finishTime, ArrayList<Task> connectedTasks)
+              int finishTime, ArrayList<Task> connectedTasks,
+              ArrayList<Task> nextTasks)
   {
     super();
     this.taskNumber = taskNumber;
@@ -22,6 +24,7 @@ public class Task //implements Comparable<Task>
     this.startTime = startTime;
     this.finishTime = finishTime;
     this.connectedTasks = connectedTasks;
+    this.nextTasks = nextTasks;
   }
 
   public int getTaskNumber()
@@ -67,5 +70,14 @@ public class Task //implements Comparable<Task>
   public void setConnectedTasks(ArrayList<Task> connectedTasks)
   {
     this.connectedTasks = connectedTasks;
+  }
+
+  public ArrayList<Task> getNextTasks()
+  {
+    return nextTasks;
+  }
+  public void setNextTasks(ArrayList<Task> nextTasks)
+  {
+    this.nextTasks = nextTasks;
   }
 }

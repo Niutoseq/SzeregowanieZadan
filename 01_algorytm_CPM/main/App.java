@@ -2,6 +2,20 @@ import java.util.ArrayList;
 
 public class App
 {
+  public static void displayHeader()
+  {
+    System.out.print("\033[H\033[2J");
+    System.out.println("╔═╗╔═╗╔╦╗  ╔═╗╦  ╔═╗╔═╗╦═╗╦╔╦╗╦ ╦╔╦╗");
+    System.out.println("║  ╠═╝║║║  ╠═╣║  ║ ╦║ ║╠╦╝║ ║ ╠═╣║║║");
+    System.out.println("╚═╝╩  ╩ ╩  ╩ ╩╩═╝╚═╝╚═╝╩╚═╩ ╩ ╩ ╩╩ ╩");
+    // System.out.print("\n");
+  }
+
+  public static void displayFrame()
+  {
+    System.out.println("-------------------------------------------");
+  }
+
   public static void main(String[] args)
   {
     // CZĘŚĆ 1: PRZYGOTOWANIE DANYCH DO OBSŁUGI
@@ -17,13 +31,15 @@ public class App
     // MachineManager.addMachine(machine3);
 
     // zadania (tablica wstępnie jako null)
-    Task task1 = new Task(0, 1, 0, 0, new ArrayList<Task>());
-    Task task2 = new Task(0, 2, 0, 0, new ArrayList<Task>());
-    Task task3 = new Task(0, 2, 0, 0, new ArrayList<Task>());
-    Task task4 = new Task(0, 1, 0, 0, new ArrayList<Task>());
-    Task task5 = new Task(0, 5, 0, 0, new ArrayList<Task>());
-    Task task6 = new Task(0, 4, 0, 0, new ArrayList<Task>());
-    Task task7 = new Task(0, 3, 0, 0, new ArrayList<Task>());
+    Task task1 = new Task(0, 1, 0, 0, new ArrayList<Task>(), new ArrayList<Task>());
+    Task task2 = new Task(0, 2, 0, 0, new ArrayList<Task>(), new ArrayList<Task>());
+    Task task3 = new Task(0, 2, 0, 0, new ArrayList<Task>(), new ArrayList<Task>());
+    Task task4 = new Task(0, 1, 0, 0, new ArrayList<Task>(), new ArrayList<Task>());
+    Task task5 = new Task(0, 5, 0, 0, new ArrayList<Task>(), new ArrayList<Task>());
+    Task task6 = new Task(0, 4, 0, 0, new ArrayList<Task>(), new ArrayList<Task>());
+    Task task7 = new Task(0, 3, 0, 0, new ArrayList<Task>(), new ArrayList<Task>());
+    Task task8 = new Task(0, 7, 0, 0, new ArrayList<Task>(), new ArrayList<Task>());
+    Task task9 = new Task(0, 3, 0, 0, new ArrayList<Task>(), new ArrayList<Task>());
 
     // dodanie zadań do listy zadań
     TaskManager.addTask(task1);
@@ -33,6 +49,8 @@ public class App
     TaskManager.addTask(task5);
     TaskManager.addTask(task6);
     TaskManager.addTask(task7);
+    TaskManager.addTask(task8);
+    TaskManager.addTask(task9);
 
 
     // CZĘŚĆ 2: GŁÓWNA CZĘŚĆ PROGRAMU
@@ -40,7 +58,7 @@ public class App
     // wyświetlenie dostępnych maszyn
     // MachineManager.displayAllMachines();
     //
-    // System.out.println("--------------------------------");
+    // displayFrame();
 
     // nadanie numerów zadaniom
     TaskManager.assignNumbersToTasks();
@@ -53,19 +71,29 @@ public class App
     TaskManager.addConnection(task6, task4);
     TaskManager.addConnection(task6, task5);
     TaskManager.addConnection(task7, task6);
+    TaskManager.addConnection(task8, task6);
+    TaskManager.addConnection(task9, task8);
 
     TaskManager.calculateTimes();
+
+    displayHeader();
+    displayFrame();
+    TaskManager.displayTasksScheme();
+    displayFrame();
     TaskManager.displayAllTasks();
 
-    System.out.println("--------------------------------");
-
-    TaskManager.findCriticalPath();
+    // displayFrame();
+    // TaskManager.findCriticalPath(TaskManager.tasks);
+    // displayFrame();
 
     // sprawdzić i wprowadzić adekwatne poprawki !!!!!
-    String result = TaskManager.displayCriticalPath(TaskManager.tasks);
-    String output = new StringBuilder(result).reverse().toString();
-    System.out.println(output);
+    // TaskManager.displayCriticalPath(TaskManager.tasks);
 
-    System.out.println("--------------------------------");
+    // displayFrame();
+    // TaskManager.displayAllPaths(TaskManager.tasks, "");
+
+    displayFrame();
+    TaskManager.criticalPathDisplayer(TaskManager.tasks);
+    displayFrame();
   }
 }
