@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.FileReader;
 import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 
 public class App
 {
@@ -77,6 +78,12 @@ public class App
         int taskNumber = Integer.parseInt(tasksFromFile.get(i).get(1));
         int taskDuration = Integer.parseInt(tasksFromFile.get(i+1).get(1));
 
+        if(taskNumber > tasksFromFile.size())
+        {
+          info("Error: Numeruj zadania po kolei, nie pomijaj numerów.");
+          displayFrame();
+          System.exit(0);
+        }
         Task task = new Task(taskNumber, taskDuration, 0, 0, new ArrayList<Task>(), new ArrayList<Task>());
         TaskManager.addTask(task);
       }
@@ -113,6 +120,61 @@ public class App
     }
   }
 
+  public static void makeGraph(ArrayList<Task> tasksToGraph)
+  {
+    prepareGraph(tasksToGraph);
+    try
+    {
+      Runtime.getRuntime().exec("dot -Tps main/graph.gv -o graph.pdf");
+    }
+    catch (Exception e)
+    {
+      info("Tworzenie grafu nie powiodło się!");
+    }
+  }
+
+  public static String graphCreator(ArrayList<Task> tasksToGraph, String result)
+  {
+    for (Task task : tasksToGraph)
+    {
+      if(!task.getConnectedTasks().isEmpty())
+      {
+        for (Task prevTask : task.getConnectedTasks())
+        {
+          result = result + "  Z" + prevTask.getTaskNumber() + "_time" + prevTask.getDuration() + "->Z" + task.getTaskNumber() + "_time" + task.getDuration() + ";\n";
+        }
+      }
+      else
+      {
+        result = result + "  Z" + task.getTaskNumber() + "_time" + task.getDuration() + ";\n";
+      }
+    }
+    return result;
+  }
+
+  public static void prepareGraph(ArrayList<Task> tasksToGraph)
+  {
+    String begin = "digraph G {\n";
+    String body = new String();
+    String end = "}";
+
+    body = graphCreator(tasksToGraph, "");
+
+    String graphFileContent = begin + body + end;
+    // System.out.println(graphFileContent);
+    try {
+      PrintWriter writer = new PrintWriter("main/graph.gv", "UTF-8");
+      writer.println(graphFileContent);
+      writer.close();
+      ProcessBuilder pb = new ProcessBuilder("xdg-open", "graph.pdf");
+      pb.start();
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+    }
+  }
+
   public static void main(String[] args)
   {
     // CZĘŚĆ 1: PRZYGOTOWANIE DANYCH DO OBSŁUGI
@@ -146,5 +208,6 @@ public class App
     displayFrame();
     TaskManager.criticalPathDisplayer(TaskManager.tasks);
     displayFrame();
+    makeGraph(TaskManager.tasks);
   }
 }

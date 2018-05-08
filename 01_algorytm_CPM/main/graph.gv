@@ -1,0 +1,14 @@
+digraph G {
+  Z1_time1;
+  Z2_time2;
+  Z3_time2;
+  Z1_time1->Z4_time1;
+  Z2_time2->Z4_time1;
+  Z2_time2->Z5_time5;
+  Z3_time2->Z5_time5;
+  Z4_time1->Z6_time4;
+  Z5_time5->Z6_time4;
+  Z6_time4->Z7_time3;
+  Z6_time4->Z8_time7;
+  Z8_time7->Z9_time3;
+}
