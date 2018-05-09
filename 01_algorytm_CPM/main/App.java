@@ -209,8 +209,8 @@ public class App
 
   public static void main(String[] args)
   {
-    String filename = "dane1.txt";
-    // String filename = "dane2.txt";
+    // String filename = "dane1.txt";
+    String filename = "dane2.txt";
 
     clearScreen();
     displayHeader();

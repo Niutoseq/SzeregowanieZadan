@@ -210,6 +210,7 @@ public class TaskManager
     ArrayList<Task> cp = returnCriticalPath(tasksToSchedule);
     Collections.reverse(cp);
     int maxFinishTime = cp.get(0).getFinishTime();
+    int scheduleTime = 0;
 
     System.out.println("SCHEDULE:");
     System.out.print("   ");
@@ -221,9 +222,11 @@ public class TaskManager
         if (task.getStartTime() == i)
         {
           System.out.print("Z" + task.getTaskNumber() + " ");
+          scheduleTime = scheduleTime + task.getDuration();
         }
       }
     }
     System.out.print("\n");
+    System.out.println("   [Schedule Time]: " + scheduleTime);
   }
 }
