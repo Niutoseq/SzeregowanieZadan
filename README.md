@@ -36,6 +36,22 @@ Repozytorium do przechowywania plików na potrzeby przedmiotu Szeregowanie Zada�
         </ul>
       </td>
       <td>Program powinien być odporny na podawanie zależności cyklicznych.</td>
+      <td>8/10 pkt</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>
+        Zaimplementowac zmodyfikowany algorytm Liu.
+      </td>
+      <td>16.05.2018</td>
+      <td>
+        <h4> 10pkt:</h4>
+        <ul>
+          <li>7 pkt (poprawny program w trybie tekstowym)</li>
+          <li>3 pkt (wizualizacja)</li>
+        </ul>
+      </td>
+      <td>-</td>
       <td></td>
     </tr>
 </table>
