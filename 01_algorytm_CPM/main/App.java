@@ -16,14 +16,17 @@ public class App
 
   public static void displayHeader()
   {
-    System.out.println("╔═╗╔═╗╔╦╗  ╔═╗╦  ╔═╗╔═╗╦═╗╦╔╦╗╦ ╦╔╦╗");
-    System.out.println("║  ╠═╝║║║  ╠═╣║  ║ ╦║ ║╠╦╝║ ║ ╠═╣║║║");
-    System.out.println("╚═╝╩  ╩ ╩  ╩ ╩╩═╝╚═╝╚═╝╩╚═╩ ╩ ╩ ╩╩ ╩");
+    System.out.println("╔═╗╦═╗╦╔╦╗╦╔═╗╔═╗╦    ╔═╗╔═╗╔╦╗╦ ╦  ╔╦╗╔═╗╔╦╗╦ ╦╔═╗╔╦╗");
+    System.out.println("║  ╠╦╝║ ║ ║║  ╠═╣║    ╠═╝╠═╣ ║ ╠═╣  ║║║║╣  ║ ╠═╣║ ║ ║║");
+    System.out.println("╚═╝╩╚═╩ ╩ ╩╚═╝╩ ╩╩═╝  ╩  ╩ ╩ ╩ ╩ ╩  ╩ ╩╚═╝ ╩ ╩ ╩╚═╝═╩╝");
+    System.out.println("     ┌─┐┌─┐┌┬┐┬┬  ┬┬┌┬┐┬ ┬  ┌─┐┌┐┌  ┌┐┌┌─┐┌┬┐┌─┐      ");
+    System.out.println("───  ├─┤│   │ │└┐┌┘│ │ └┬┘  │ ││││  ││││ │ ││├┤   ─── ");
+    System.out.println("     ┴ ┴└─┘ ┴ ┴ └┘ ┴ ┴  ┴   └─┘┘└┘  ┘└┘└─┘─┴┘└─┘      ");
   }
 
   public static void displayFrame()
   {
-    System.out.println("------------------------------------------------------------");
+    System.out.println("------------------------------------------------------");
   }
 
   public static void info(String infoText)
@@ -31,10 +34,10 @@ public class App
     System.out.println(infoText);
   }
 
-  public static void prepareData()
+  public static void prepareData(String fileToPrepare)
   {
     Scanner in;
-    String filename = "dane.txt";
+    String filename = fileToPrepare;
     String outString = new String();
 
     try {
@@ -125,7 +128,7 @@ public class App
     prepareGraph(tasksToGraph);
     try
     {
-      Runtime.getRuntime().exec("dot -Tps main/graph.gv -o graph.pdf");
+      Runtime.getRuntime().exec("dot -Tps main/graph.gv -o graph.ps");
     }
     catch (Exception e)
     {
@@ -137,24 +140,53 @@ public class App
   {
     for (Task task : tasksToGraph)
     {
+      result = result + "  \"Z" + task.getTaskNumber()
+        + " (" + task.getStartTime() + "," + task.getFinishTime() + ") "
+        + task.getDuration() + "\"[color=darkgreen style=filled fillcolor=palegreen];\n";
+
       if(!task.getConnectedTasks().isEmpty())
       {
         for (Task prevTask : task.getConnectedTasks())
         {
-          result = result + "  Z" + prevTask.getTaskNumber() + "_time" + prevTask.getDuration() + "->Z" + task.getTaskNumber() + "_time" + task.getDuration() + ";\n";
+          result = result + "  \"Z" + prevTask.getTaskNumber()
+            + " (" + prevTask.getStartTime() + "," + prevTask.getFinishTime()
+            + ") " + prevTask.getDuration() + "\" -> \"Z"
+            + task.getTaskNumber() + " (" + task.getStartTime()
+            + "," + task.getFinishTime() + ") " + task.getDuration()
+            + "\";\n";
         }
       }
       else
       {
-        result = result + "  Z" + task.getTaskNumber() + "_time" + task.getDuration() + ";\n";
+        result = result + "  \"Z" + task.getTaskNumber()
+          + " (" + task.getStartTime() + "," + task.getFinishTime() + ") "
+          + task.getDuration() + "\";\n";
       }
     }
+
+    ArrayList<Task> cp = TaskManager.returnCriticalPath(TaskManager.tasks);
+    int counter = 0;
+    for (Task cpTask : cp)
+    {
+      if (counter == cp.size()-1)
+      {
+        result = result + "  \"Z" + cpTask.getTaskNumber()
+          + " (" + cpTask.getStartTime() + "," + cpTask.getFinishTime()
+          + ") " + cpTask.getDuration() + "\" [color=darkviolet];\n";
+          break;
+      }
+      result = result + "  \"Z" + cpTask.getTaskNumber()
+        + " (" + cpTask.getStartTime() + "," + cpTask.getFinishTime()
+        + ") " + cpTask.getDuration() + "\" -> ";
+      counter++;
+    }
+
     return result;
   }
 
   public static void prepareGraph(ArrayList<Task> tasksToGraph)
   {
-    String begin = "digraph G {\n";
+    String begin = "strict digraph G {\n";
     String body = new String();
     String end = "}";
 
@@ -166,7 +198,7 @@ public class App
       PrintWriter writer = new PrintWriter("main/graph.gv", "UTF-8");
       writer.println(graphFileContent);
       writer.close();
-      ProcessBuilder pb = new ProcessBuilder("xdg-open", "graph.pdf");
+      ProcessBuilder pb = new ProcessBuilder("xdg-open", "graph.ps");
       pb.start();
     }
     catch (Exception e)
@@ -177,29 +209,13 @@ public class App
 
   public static void main(String[] args)
   {
-    // CZĘŚĆ 1: PRZYGOTOWANIE DANYCH DO OBSŁUGI
+    String filename = "dane1.txt";
+    // String filename = "dane2.txt";
 
     clearScreen();
     displayHeader();
     displayFrame();
-    prepareData();
-
-    // // maszyny (tablica wstępnie jako null)
-    // Machine machine1 = new Machine(1, true, null);
-    // Machine machine2 = new Machine(2, true, null);
-    // Machine machine3 = new Machine(3, true, null);
-    //
-    // // dodanie maszyn do listy maszyn
-    // MachineManager.addMachine(machine1);
-    // MachineManager.addMachine(machine2);
-    // MachineManager.addMachine(machine3);
-
-
-    // CZĘŚĆ 2: GŁÓWNA CZĘŚĆ PROGRAMU
-
-    // wyświetlenie dostępnych maszyn
-    // MachineManager.displayAllMachines();
-    // displayFrame();
+    prepareData(filename);
 
     TaskManager.calculateTimes();
     TaskManager.displayTasksScheme();
@@ -209,5 +225,7 @@ public class App
     TaskManager.criticalPathDisplayer(TaskManager.tasks);
     displayFrame();
     makeGraph(TaskManager.tasks);
+    TaskManager.scheduleDisplayer(TaskManager.tasks);
+    displayFrame();
   }
 }

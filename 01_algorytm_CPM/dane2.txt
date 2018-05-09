@@ -1,0 +1,39 @@
+numer_zadania 1
+czas_trwania 1
+zadania_poprzednie nie
+numer_zadania 2
+czas_trwania 6
+zadania_poprzednie tak 1
+numer_zadania 3
+czas_trwania 2
+zadania_poprzednie tak 1 2
+numer_zadania 4
+czas_trwania 3
+zadania_poprzednie tak 2
+numer_zadania 5
+czas_trwania 5
+zadania_poprzednie tak 2 4
+numer_zadania 6
+czas_trwania 5
+zadania_poprzednie tak 2
+numer_zadania 7
+czas_trwania 3
+zadania_poprzednie tak 4
+numer_zadania 8
+czas_trwania 10
+zadania_poprzednie tak 7
+numer_zadania 9
+czas_trwania 9
+zadania_poprzednie tak 7
+numer_zadania 10
+czas_trwania 8
+zadania_poprzednie tak 7 8
+numer_zadania 11
+czas_trwania 8
+zadania_poprzednie tak 7
+numer_zadania 12
+czas_trwania 7
+zadania_poprzednie tak 9
+numer_zadania 13
+czas_trwania 6
+zadania_poprzednie tak 6 9

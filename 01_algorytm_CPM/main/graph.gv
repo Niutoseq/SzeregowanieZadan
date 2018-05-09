@@ -1,14 +1,24 @@
-digraph G {
-  Z1_time1;
-  Z2_time2;
-  Z3_time2;
-  Z1_time1->Z4_time1;
-  Z2_time2->Z4_time1;
-  Z2_time2->Z5_time5;
-  Z3_time2->Z5_time5;
-  Z4_time1->Z6_time4;
-  Z5_time5->Z6_time4;
-  Z6_time4->Z7_time3;
-  Z6_time4->Z8_time7;
-  Z8_time7->Z9_time3;
+strict digraph G {
+  "Z1 (0,1) 1"[color=darkgreen style=filled fillcolor=palegreen];
+  "Z1 (0,1) 1";
+  "Z2 (0,2) 2"[color=darkgreen style=filled fillcolor=palegreen];
+  "Z2 (0,2) 2";
+  "Z3 (0,2) 2"[color=darkgreen style=filled fillcolor=palegreen];
+  "Z3 (0,2) 2";
+  "Z4 (2,3) 1"[color=darkgreen style=filled fillcolor=palegreen];
+  "Z1 (0,1) 1" -> "Z4 (2,3) 1";
+  "Z2 (0,2) 2" -> "Z4 (2,3) 1";
+  "Z5 (2,7) 5"[color=darkgreen style=filled fillcolor=palegreen];
+  "Z2 (0,2) 2" -> "Z5 (2,7) 5";
+  "Z3 (0,2) 2" -> "Z5 (2,7) 5";
+  "Z6 (7,11) 4"[color=darkgreen style=filled fillcolor=palegreen];
+  "Z4 (2,3) 1" -> "Z6 (7,11) 4";
+  "Z5 (2,7) 5" -> "Z6 (7,11) 4";
+  "Z7 (11,14) 3"[color=darkgreen style=filled fillcolor=palegreen];
+  "Z6 (7,11) 4" -> "Z7 (11,14) 3";
+  "Z8 (11,18) 7"[color=darkgreen style=filled fillcolor=palegreen];
+  "Z6 (7,11) 4" -> "Z8 (11,18) 7";
+  "Z9 (18,21) 3"[color=darkgreen style=filled fillcolor=palegreen];
+  "Z8 (11,18) 7" -> "Z9 (18,21) 3";
+  "Z2 (0,2) 2" ->   "Z5 (2,7) 5" ->   "Z6 (7,11) 4" ->   "Z8 (11,18) 7" ->   "Z9 (18,21) 3" [color=darkviolet];
 }

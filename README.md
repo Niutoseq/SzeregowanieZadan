@@ -26,13 +26,13 @@ Repozytorium do przechowywania plików na potrzeby przedmiotu Szeregowanie Zada�
         Zaimplementować (w dowolnym języku programowania) wybrany
         przez siebie algorytm dla metody CPM (na sieci AA lub sieci AN).
       </td>
-      <td>30.04.2018</td>
+      <td>09.05.2018</td>
       <td>
         <h4>10 pkt:</h4>
 		    <ul>
           <li>6 pkt (poprawny program w trybie tekstowym)</li>
           <li>2 pkt (wizualizacja grafu zalezności kolejnościowych)</li>
-          <li>2pkt (wizualizacja harmonogramu)</li>
+          <li>2 pkt (wizualizacja harmonogramu)</li>
         </ul>
       </td>
       <td>Program powinien być odporny na podawanie zależności cyklicznych.</td>

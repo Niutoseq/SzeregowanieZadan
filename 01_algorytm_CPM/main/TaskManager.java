@@ -8,6 +8,15 @@ public class TaskManager
 
   public static void addTask(Task task)
   {
+    for (Task searchTask : tasks)
+    {
+      if (searchTask.getTaskNumber() == task.getTaskNumber())
+      {
+        System.out.println("[Task" + task.getTaskNumber() + "]: Zadanie o podanym numerze już istnieje!");
+        App.displayFrame();
+        System.exit(0);
+      }
+    }
     tasks.add(task);
   }
 
@@ -45,7 +54,8 @@ public class TaskManager
   public static void displayTasksScheme()
   {
     System.out.println("SCHEME:");
-    System.out.println("[Task no. <num>] <duration>, <start>, <finish>, {<prevTasks>}, {<nextTasks>}");
+    System.out.println("[Task no. <num>] <duration>, <start>, <finish>,");
+    System.out.println("                          {<prevTasks>}, {<nextTasks>}");
   }
 
   public static void displayAllTasks()
@@ -169,10 +179,10 @@ public class TaskManager
   {
     ArrayList<Task> cp = new ArrayList<Task>();
     findCriticalPath(tasksToPath, cp);
-    System.out.println("[Critical Path Time]:   " + cp.get(0).getFinishTime());
+    System.out.println("[Critical Path Time]: " + cp.get(0).getFinishTime());
 
     Collections.reverse(cp);
-    System.out.print("[Critical Path String]: ");
+    System.out.print("[Critical Path]: ");
     int x = 0;
     for (Task task : cp)
     {
@@ -183,6 +193,36 @@ public class TaskManager
       }
       System.out.print("Z" + task.getTaskNumber() + " -> ");
       x++;
+    }
+    System.out.print("\n");
+  }
+
+  public static ArrayList<Task> returnCriticalPath(ArrayList<Task> tasksToPath)
+  {
+    ArrayList<Task> cp = new ArrayList<Task>();
+    findCriticalPath(tasksToPath, cp);
+    Collections.reverse(cp);
+    return cp;
+  }
+
+  public static void scheduleDisplayer(ArrayList<Task> tasksToSchedule)
+  {
+    ArrayList<Task> cp = returnCriticalPath(tasksToSchedule);
+    Collections.reverse(cp);
+    int maxFinishTime = cp.get(0).getFinishTime();
+
+    System.out.println("SCHEDULE:");
+    System.out.print("   ");
+
+    for (int i = 0; i <= maxFinishTime; i++)
+    {
+      for (Task task : tasksToSchedule)
+      {
+        if (task.getStartTime() == i)
+        {
+          System.out.print("Z" + task.getTaskNumber() + " ");
+        }
+      }
     }
     System.out.print("\n");
   }
