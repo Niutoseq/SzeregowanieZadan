@@ -41,7 +41,7 @@ Repozytorium do przechowywania plików na potrzeby przedmiotu Szeregowanie Zada�
     <tr>
       <td>2</td>
       <td>
-        Zaimplementowac zmodyfikowany algorytm Liu.
+        Zaimplementować zmodyfikowany algorytm Liu.
       </td>
       <td>16.05.2018</td>
       <td>
