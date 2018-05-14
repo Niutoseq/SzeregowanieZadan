@@ -7,6 +7,7 @@ public class Task
   private int arrivalTime;              // czas przybycia
   private int finishTime;               // czas zakończenia
   private int modFinishTime;            // zmodyfikowany czas zakończenia
+  private int lateness;                 // opóźnienie
   private ArrayList<Task> prevTasks;    // zadania, na które oczekuje obecne
   private ArrayList<Task> nextTasks;    // zadania oczekujące na obecne
   private Boolean isActive = false;     // true gdy obecne, false gdy jeszcze nie
@@ -18,8 +19,9 @@ public class Task
   }
 
   public Task(int taskNumber, int duration, int arrivalTime,
-              int finishTime, int modFinishTime,
-              ArrayList<Task> prevTasks, ArrayList<Task> nextTasks)
+              int finishTime, int modFinishTime, int lateness,
+              ArrayList<Task> prevTasks, ArrayList<Task> nextTasks,
+              Boolean isActive, Boolean isCompleted)
   {
     super();
     this.taskNumber = taskNumber;
@@ -27,8 +29,11 @@ public class Task
     this.arrivalTime = arrivalTime;
     this.finishTime = finishTime;
     this.modFinishTime = modFinishTime;
+    this.lateness = lateness;
     this.prevTasks = prevTasks;
     this.nextTasks = nextTasks;
+    this.isActive = isActive;
+    this.isCompleted = isCompleted;
   }
 
   public int getTaskNumber()
@@ -74,6 +79,15 @@ public class Task
   public void setModFinishTime(int modFinishTime)
   {
     this.modFinishTime = modFinishTime;
+  }
+
+  public int getLateness()
+  {
+    return this.lateness;
+  }
+  public void setLateness(int lateness)
+  {
+    this.lateness = lateness;
   }
 
   public ArrayList<Task> getPrevTasks()

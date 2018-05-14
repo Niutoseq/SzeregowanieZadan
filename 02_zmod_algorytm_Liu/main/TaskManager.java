@@ -103,16 +103,26 @@ public class TaskManager
 
   public static Boolean isAllTasksCompleted(ArrayList<Task> tasksToComplete)
   {
-    int counter = 0;
+    return isAllTasksCompletedHelper(tasksToComplete, 0);
+  }
+
+  public static Boolean isAllTasksCompletedHelper(ArrayList<Task> tasksToComplete, int counter)
+  {
     for (Task task : tasksToComplete)
     {
       if (!task.getIsCompleted()) counter++;
+      isAllTasksCompletedHelper(task.getPrevTasks(), counter);
     }
     if (counter == 0) return true;
     else return false;
   }
 
   public static void makeSchedule()
+  {
+    prepareSchedule(1);
+  }
+
+  public static void prepareSchedule(int minimalModIndex)
   {
     System.out.println("SCHEDULE:");
 
@@ -130,7 +140,6 @@ public class TaskManager
         }
       }
 
-      int minimalModIndex = 0;
       if (!activeTasks.isEmpty())
       {
         for (Task task1 : activeTasks)
@@ -139,33 +148,57 @@ public class TaskManager
           {
             if (task1.getModFinishTime() <= task2.getModFinishTime())
             {
-              minimalModIndex = task1.getTaskNumber();
+              if (isAllTasksCompleted(task1.getPrevTasks()))
+                minimalModIndex = task1.getTaskNumber();
             }
             else
             {
-              minimalModIndex = task2.getTaskNumber();
+              if (isAllTasksCompleted(task2.getPrevTasks()))
+                minimalModIndex = task2.getTaskNumber();
             }
           }
         }
-        int duration = tasks.get(minimalModIndex-1).getDuration()-1;
-        tasks.get(minimalModIndex-1).setDuration(duration);
-        System.out.println((time+1) + ": Z" + tasks.get(minimalModIndex-1).getTaskNumber());
+        Task currentTask = new Task();
+        currentTask = tasks.get(minimalModIndex - 1);
+        if (currentTask.getIsActive() && !currentTask.getIsCompleted()) {
+          int duration = currentTask.getDuration() - 1;
+          currentTask.setDuration(duration);
+          // System.out.println((time+1) + ": Z" + currentTask.getTaskNumber() + " [" + currentTask.getDuration() + "]");
+          System.out.println(time + "-" + (time + 1) + ": Z" + currentTask.getTaskNumber());
+        }
+        else
+        {
+          System.out.println(time + "-" + (time + 1) + ": -");
+        }
       }
       else
       {
-        System.out.println((time+1) + ": przerwa");
+        System.out.println(time + "-" + (time + 1) + ": -");
       }
 
       for (Task task : tasks)
       {
-        if (task.getDuration() == 0)
+        if (task.getDuration() == 0 && !task.getIsCompleted())
         {
           task.setIsCompleted(true);
+          task.setLateness((time + 1) - task.getFinishTime());
           activeTasks.remove(task);
         }
       }
 
       time++;
     }
+  }
+
+  public static void calculateMaxLateness()
+  {
+    ArrayList<Integer> latenesses = new ArrayList<Integer>();
+    for (Task task : tasks)
+    {
+      latenesses.add(task.getLateness());
+    }
+    Collections.sort(latenesses);
+    Collections.reverse(latenesses);
+    System.out.println("Lmax* = " + latenesses.get(0));
   }
 }
