@@ -117,12 +117,13 @@ public class TaskManager
     else return false;
   }
 
-  public static void makeSchedule()
+  public static String makeSchedule()
   {
-    prepareSchedule(1);
+    String result = new String();
+    return prepareSchedule(1, result);
   }
 
-  public static void prepareSchedule(int minimalModIndex)
+  public static String prepareSchedule(int minimalModIndex, String result)
   {
     System.out.println("SCHEDULE:");
 
@@ -165,15 +166,30 @@ public class TaskManager
           currentTask.setDuration(duration);
           // System.out.println((time+1) + ": Z" + currentTask.getTaskNumber() + " [" + currentTask.getDuration() + "]");
           System.out.println(time + "-" + (time + 1) + ": Z" + currentTask.getTaskNumber());
+
+          result = result + "{";
+          result = result + time + "-" + (time+1) + "|";
+          result = result + "Z" + currentTask.getTaskNumber();
+          result = result + "}|";
         }
         else
         {
           System.out.println(time + "-" + (time + 1) + ": -");
+
+          result = result + "{";
+          result = result + time + "-" + (time+1) + "|";
+          result = result + "-";
+          result = result + "}|";
         }
       }
       else
       {
         System.out.println(time + "-" + (time + 1) + ": -");
+
+        result = result + "{";
+        result = result + time + "-" + (time+1) + "|";
+        result = result + "-";
+        result = result + "}|";
       }
 
       for (Task task : tasks)
@@ -188,6 +204,7 @@ public class TaskManager
 
       time++;
     }
+    return result;
   }
 
   public static void calculateMaxLateness()

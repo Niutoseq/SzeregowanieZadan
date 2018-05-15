@@ -86,6 +86,61 @@ public class App
     }
   }
 
+  public static void makeSchedule(ArrayList<Task> tasksToSchedule)
+  {
+    prepareSchedule(tasksToSchedule);
+    try
+    {
+      Runtime.getRuntime().exec("dot -Tps main/schedule.gv -o schedule.ps");
+    }
+    catch (Exception e)
+    {
+      System.out.println("Tworzenie harmonogramu nie powiodło się!");
+    }
+
+    try
+    {
+      ProcessBuilder pb = new ProcessBuilder("xdg-open", "schedule.ps");
+      pb.start();
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+    }
+  }
+
+  public static String scheduleCreator(ArrayList<Task> tasksToSchedule, String result)
+  {
+    int counter = 0;
+    result = result + "struct1 [shape=record,label=\"";
+    result = result + TaskManager.makeSchedule();
+    result = result.substring(0, result.length() - 1);
+    result = result + "\"];\n";
+    return result;
+  }
+
+  public static void prepareSchedule(ArrayList<Task> tasksToSchedule)
+  {
+    String begin = "digraph struct {\n";
+    begin = begin + "node [shape=record];\n";
+    String body = new String();
+    String end = "}";
+
+    body = scheduleCreator(tasksToSchedule, "");
+
+    String scheduleFileContent = begin + body + end;
+    // System.out.println(scheduleFileContent);
+    try {
+      PrintWriter writer = new PrintWriter("main/schedule.gv", "UTF-8");
+      writer.println(scheduleFileContent);
+      writer.close();
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
+    }
+  }
+
   public static void closeApp(String info)
   {
     System.out.println(info);
@@ -117,9 +172,9 @@ public class App
     TaskManager.assignModifiedFinishTime();
     TaskManager.displayAllTasks();
     System.out.print("\n");
-    TaskManager.makeSchedule();
-    System.out.print("\n");
     makeGraph(TaskManager.tasks);
+    makeSchedule(TaskManager.tasks);
+    System.out.print("\n");
 
     // for (Task task : TaskManager.tasks)
     // {
