@@ -88,7 +88,7 @@ public class App
 
   public static void makeSchedule(ArrayList<Task> tasksToSchedule)
   {
-    prepareSchedule(tasksToSchedule);
+    prepareScheduleAlternative();
     try
     {
       Runtime.getRuntime().exec("dot -Tps main/schedule.gv -o schedule.ps");
@@ -109,35 +109,87 @@ public class App
     }
   }
 
-  public static String scheduleCreator(ArrayList<Task> tasksToSchedule, String result)
+  public static void prepareScheduleAlternative()
   {
-    int counter = 0;
-    result = result + "struct1 [shape=record,label=\"";
-    result = result + TaskManager.makeSchedule();
-    result = result.substring(0, result.length() - 1);
-    result = result + "\"];\n";
-    return result;
-  }
-
-  public static void prepareSchedule(ArrayList<Task> tasksToSchedule)
-  {
+    String mySchedule = new String();
     String begin = "digraph struct {\n";
     begin = begin + "node [shape=record];\n";
     String body = new String();
+    String result = new String();
+    result = result + "struct1 [shape=record, color=darkgreen,";
+    result = result + " style=filled, fillcolor=palegreen, label=\"";
+
+    int time = 0;
+    for (ScheduleTask stask : TaskManager.forSchedule)
+    {
+      result = result + "{";
+      if (stask.getDuration() == 1)
+      {
+        result = result + time + "-" + (time+1) + "|";
+      }
+      else if (stask.getDuration() > 1)
+      {
+        result = result + "{";
+        for (int i = 0; i < stask.getDuration() ; i++)
+        {
+          result = result + time + "-" + (time+1) + "|";
+          if (i == stask.getDuration() - 1)
+          {
+            time--;
+          }
+          time++;
+        }
+        result = result.substring(0, result.length() - 1);
+        result = result + "}|";
+      }
+      if (stask.getTaskNumber() == 0)
+      {
+        result = result + "-";
+      }
+      else result = result + "Z" + stask.getTaskNumber();
+      result = result + "}|";
+      time++;
+    }
+    result = result.substring(0, result.length() - 1);
+    result = result + "\"];\n";
+    body = result;
     String end = "}";
+    mySchedule = begin + body + end;
+    // System.out.println(mySchedule);
 
-    body = scheduleCreator(tasksToSchedule, "");
-
-    String scheduleFileContent = begin + body + end;
-    // System.out.println(scheduleFileContent);
     try {
       PrintWriter writer = new PrintWriter("main/schedule.gv", "UTF-8");
-      writer.println(scheduleFileContent);
+      writer.println(mySchedule);
       writer.close();
     }
     catch (Exception e)
     {
       e.printStackTrace();
+    }
+  }
+
+  public static void prepareScheduleArray()
+  {
+    for (int i = 0; i < TaskManager.forSchedule.size() - 1; i++)
+    {
+      for (int j = 0; j < TaskManager.forSchedule.size() - 1; j++)
+      {
+        if (TaskManager.forSchedule.get(j).getTaskNumber() == TaskManager.forSchedule.get(j+1).getTaskNumber())
+        {
+          TaskManager.forSchedule.get(j).setDuration(TaskManager.forSchedule.get(j).getDuration() + TaskManager.forSchedule.get(j+1).getDuration());
+          TaskManager.forSchedule.get(j+1).setDuration(0);
+        }
+      }
+    }
+
+    ArrayList<ScheduleTask> deleteCandidates = new ArrayList<ScheduleTask>();
+    for (ScheduleTask stask : TaskManager.forSchedule)
+    {
+      if (stask.getDuration() == 0) deleteCandidates.add(stask);
+    }
+    for (ScheduleTask delCandidate : deleteCandidates)
+    {
+      TaskManager.forSchedule.remove(delCandidate);
     }
   }
 
@@ -172,16 +224,17 @@ public class App
     TaskManager.assignModifiedFinishTime();
     TaskManager.displayAllTasks();
     System.out.print("\n");
+
     makeGraph(TaskManager.tasks);
-    makeSchedule(TaskManager.tasks);
+    TaskManager.makeSchedule();
     System.out.print("\n");
 
-    // for (Task task : TaskManager.tasks)
-    // {
-    //   System.out.println(task.getTaskNumber() + ": " + task.getLateness());
-    // }
-
     TaskManager.calculateMaxLateness();
+
+    prepareScheduleArray();
+    prepareScheduleAlternative();
+    makeSchedule(TaskManager.tasks);
+
     System.out.print("\n");
   }
 }

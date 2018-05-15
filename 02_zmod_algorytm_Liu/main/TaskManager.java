@@ -4,6 +4,7 @@ import java.util.Collections;
 public class TaskManager
 {
   public static ArrayList<Task> tasks = new ArrayList<Task>();
+  public static ArrayList<ScheduleTask> forSchedule = new ArrayList<ScheduleTask>();
 
   public static void addTask(Task taskToAdd)
   {
@@ -117,13 +118,12 @@ public class TaskManager
     else return false;
   }
 
-  public static String makeSchedule()
+  public static void makeSchedule()
   {
-    String result = new String();
-    return prepareSchedule(1, result);
+    prepareSchedule(1);
   }
 
-  public static String prepareSchedule(int minimalModIndex, String result)
+  public static void prepareSchedule(int minimalModIndex)
   {
     System.out.println("SCHEDULE:");
 
@@ -141,6 +141,7 @@ public class TaskManager
         }
       }
 
+      ScheduleTask scheduleTask = new ScheduleTask();
       if (!activeTasks.isEmpty())
       {
         for (Task task1 : activeTasks)
@@ -167,29 +168,26 @@ public class TaskManager
           // System.out.println((time+1) + ": Z" + currentTask.getTaskNumber() + " [" + currentTask.getDuration() + "]");
           System.out.println(time + "-" + (time + 1) + ": Z" + currentTask.getTaskNumber());
 
-          result = result + "{";
-          result = result + time + "-" + (time+1) + "|";
-          result = result + "Z" + currentTask.getTaskNumber();
-          result = result + "}|";
+          scheduleTask.setTaskNumber(currentTask.getTaskNumber());
+          scheduleTask.setDuration(scheduleTask.getDuration()+1);
+          forSchedule.add(scheduleTask);
         }
         else
         {
           System.out.println(time + "-" + (time + 1) + ": -");
 
-          result = result + "{";
-          result = result + time + "-" + (time+1) + "|";
-          result = result + "-";
-          result = result + "}|";
+          scheduleTask.setTaskNumber(0);
+          scheduleTask.setDuration(scheduleTask.getDuration()+1);
+          forSchedule.add(scheduleTask);
         }
       }
       else
       {
         System.out.println(time + "-" + (time + 1) + ": -");
 
-        result = result + "{";
-        result = result + time + "-" + (time+1) + "|";
-        result = result + "-";
-        result = result + "}|";
+        scheduleTask.setTaskNumber(0);
+        scheduleTask.setDuration(scheduleTask.getDuration()+1);
+        forSchedule.add(scheduleTask);
       }
 
       for (Task task : tasks)
@@ -204,7 +202,6 @@ public class TaskManager
 
       time++;
     }
-    return result;
   }
 
   public static void calculateMaxLateness()
