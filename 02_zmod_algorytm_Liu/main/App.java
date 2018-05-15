@@ -6,6 +6,11 @@ import java.io.PrintWriter;
 
 public class App
 {
+  static ArrayList<String> fileContent = new ArrayList<String>();
+  static ArrayList<ArrayList<String>> tasksFromFile = new ArrayList<ArrayList<String>>();
+
+  public static String globalTaskName = "Z";
+
   public static void clearScreen()
   {
     System.out.print("\033[H\033[2J");
@@ -20,6 +25,86 @@ public class App
     System.out.println("││││ │ │││├┤ │├┤  ││  └┐┌┘├┤ ├┬┘└─┐││ ││││");
     System.out.println("┴ ┴└─┘─┴┘┴└  ┴└─┘─┴┘   └┘ └─┘┴└─└─┘┴└─┘┘└┘");
     System.out.print("\n");
+  }
+
+  public static void prepareData(String fileToPrepare)
+  {
+    Scanner in;
+    String filename = fileToPrepare;
+    String outString = new String();
+
+    try {
+      in = new Scanner(new FileReader(filename));
+      while(in.hasNextLine()) {
+          fileContent.add(in.nextLine());
+      }
+      in.close();
+    }
+    catch (FileNotFoundException e)
+    {
+      closeApp("Nie udało się otworzyć pliku " + filename + "!");
+    }
+
+    if (fileContent.isEmpty())
+    {
+      // przypadek, kiedy plik jest pusty
+      closeApp("Plik " + filename + " jest pusty!");
+    }
+    else
+    {
+      // przypadek, kiedy plik nie jest pusty
+      for (String line : fileContent)
+      {
+        String[] splited = line.split("\\s");
+        ArrayList<String> splitResult = new ArrayList<String>();
+        for (String part : splited)
+        {
+          splitResult.add(part);
+        }
+        tasksFromFile.add(splitResult);
+      }
+
+      for (int i = 1; i < tasksFromFile.size(); i++)
+      {
+        int taskNumber = Integer.parseInt(tasksFromFile.get(i).get(0));
+        int taskDuration = Integer.parseInt(tasksFromFile.get(i).get(1));
+        int taskArrival = Integer.parseInt(tasksFromFile.get(i).get(2));
+        int taskFinish = Integer.parseInt(tasksFromFile.get(i).get(3));
+
+        if(taskNumber > tasksFromFile.size())
+        {
+          closeApp("Error: Numeruj zadania po kolei, nie pomijaj numerów.");
+        }
+        Task task = new Task(taskNumber, taskDuration, taskArrival, taskFinish, 0, 0, new ArrayList<Task>(), new ArrayList<Task>(), false, false);
+        TaskManager.addTask(task);
+      }
+
+      for (int i = 1; i < tasksFromFile.size(); i++)
+      {
+        String prevCheck = tasksFromFile.get(i).get(4);
+        int taskNumber = Integer.parseInt(tasksFromFile.get(i).get(0));
+
+        if (prevCheck.equals("tak"))
+        {
+          if (tasksFromFile.get(i).size() <= 5)
+          {
+            closeApp("[Task" + taskNumber + "]: Wybrano zadania poprzedzające, jednak ich nie sprecyzowano!");
+          }
+          for (int j = 5; j < tasksFromFile.get(i).size(); j++)
+          {
+            TaskManager.addConnection(TaskManager.tasks.get(Integer.parseInt(tasksFromFile.get(i).get(j))-1).getTaskNumber(), TaskManager.tasks.get(taskNumber-1).getTaskNumber());
+          }
+        }
+        else if (prevCheck.equals("nie"))
+        {
+          // brak zadań powiązanych
+        }
+        else
+        {
+          closeApp("[PrevCheck]: Task" + taskNumber + " (\"" + prevCheck + "\"): Decyzja nierozpoznana!");
+        }
+      }
+    }
   }
 
   public static void makeGraph(ArrayList<Task> tasksToGraph)
@@ -49,15 +134,15 @@ public class App
   {
     for (Task task : tasksToGraph)
     {
-      result = result + "  \"Z" + task.getTaskNumber()
+      result = result + "  \"" + globalTaskName + task.getTaskNumber()
         + "\" [color=darkgreen style=filled fillcolor=palegreen];\n";
 
       if(!task.getNextTasks().isEmpty())
       {
         for (Task nextTask : task.getNextTasks())
         {
-          result = result + "  \"Z" + task.getTaskNumber() + "\""
-            + " -> " + "\"Z" + nextTask.getTaskNumber() + "\""
+          result = result + "  \"" + globalTaskName + task.getTaskNumber() + "\""
+            + " -> " + "\"" + globalTaskName + nextTask.getTaskNumber() + "\""
             + " [color=black style=filled fillcolor=green3];\n";
         }
       }
@@ -120,6 +205,7 @@ public class App
     result = result + " style=filled, fillcolor=palegreen, label=\"";
 
     int time = 0;
+    result = result + "{Time|Task}|";
     for (ScheduleTask stask : TaskManager.forSchedule)
     {
       result = result + "{";
@@ -146,7 +232,7 @@ public class App
       {
         result = result + "-";
       }
-      else result = result + "Z" + stask.getTaskNumber();
+      else result = result + globalTaskName + stask.getTaskNumber();
       result = result + "}|";
       time++;
     }
@@ -204,22 +290,8 @@ public class App
     clearScreen();
     displayHeader();
 
-    // schemat: numer, trwanie, przybycie, stop, modStop, opóźnienie, prev, next, isActive?, isCompleted?
-    TaskManager.addTask(new Task(1, 3, 0, 4, 0, 0, new ArrayList<Task>(), new ArrayList<Task>(), false, false));
-    TaskManager.addTask(new Task(2, 2, 4, 6, 0, 0, new ArrayList<Task>(), new ArrayList<Task>(), false, false));
-    TaskManager.addTask(new Task(3, 2, 2, 8, 0, 0, new ArrayList<Task>(), new ArrayList<Task>(), false, false));
-    TaskManager.addTask(new Task(4, 1, 5, 15, 0, 0, new ArrayList<Task>(), new ArrayList<Task>(), false, false));
-    TaskManager.addTask(new Task(5, 4, 6, 10, 0, 0, new ArrayList<Task>(), new ArrayList<Task>(), false, false));
-    TaskManager.addTask(new Task(6, 1, 15, 20, 0, 0, new ArrayList<Task>(), new ArrayList<Task>(), false, false));
-    TaskManager.addTask(new Task(7, 2, 13, 25, 0, 0, new ArrayList<Task>(), new ArrayList<Task>(), false, false));
-
-    TaskManager.addConnection(1, 3);
-    TaskManager.addConnection(2, 4);
-    TaskManager.addConnection(3, 5);
-    TaskManager.addConnection(4, 5);
-    TaskManager.addConnection(4, 6);
-    TaskManager.addConnection(5, 7);
-    TaskManager.addConnection(6, 7);
+    String filename = "dane.txt";
+    prepareData(filename);
 
     TaskManager.assignModifiedFinishTime();
     TaskManager.displayAllTasks();

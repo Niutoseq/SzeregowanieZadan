@@ -16,6 +16,12 @@ public class TaskManager
     Task task1 = tasks.get(task1number-1);
     Task task2 = tasks.get(task2number-1);
 
+    if (task1.getTaskNumber() == task2.getTaskNumber())
+      App.closeApp("[Task" + task1.getTaskNumber() + "]: Nie można utworzyć powiązania zadania z samym sobą!");
+
+    if (task1.getTaskNumber() > task2.getTaskNumber())
+      App.closeApp("[Task" + task1.getTaskNumber() + "]: Zadanie o numerze wyższym nie może poprzedzać numeru niższego!");
+
     if (tasks.contains(task1) && tasks.contains(task2))
     {
       task1.getNextTasks().add(task2);
@@ -165,8 +171,8 @@ public class TaskManager
         if (currentTask.getIsActive() && !currentTask.getIsCompleted()) {
           int duration = currentTask.getDuration() - 1;
           currentTask.setDuration(duration);
-          // System.out.println((time+1) + ": Z" + currentTask.getTaskNumber() + " [" + currentTask.getDuration() + "]");
-          System.out.println(time + "-" + (time + 1) + ": Z" + currentTask.getTaskNumber());
+          // System.out.println((time+1) + ": " + globalTaskName + currentTask.getTaskNumber() + " [" + currentTask.getDuration() + "]");
+          System.out.println(time + "-" + (time + 1) + ": " + App.globalTaskName + currentTask.getTaskNumber());
 
           scheduleTask.setTaskNumber(currentTask.getTaskNumber());
           scheduleTask.setDuration(scheduleTask.getDuration()+1);
