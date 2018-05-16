@@ -11,6 +11,12 @@ Repozytorium do przechowywania plików na potrzeby przedmiotu Szeregowanie Zada�
 
 ## Laboratorium
 
+| Oddanych zadań | Uzyskane punkty |
+|----------------|-----------------|
+| 2/3            | 18/30 pkt       |
+
+## Informacje szczegółowe
+
 <table>
 	<tr>
       <th>L.P.</th>
@@ -45,7 +51,23 @@ Repozytorium do przechowywania plików na potrzeby przedmiotu Szeregowanie Zada�
       </td>
       <td>16.05.2018</td>
       <td>
-        <h4> 10pkt:</h4>
+        <h4>10 pkt:</h4>
+        <ul>
+          <li>7 pkt (poprawny program w trybie tekstowym)</li>
+          <li>3 pkt (wizualizacja)</li>
+        </ul>
+      </td>
+      <td>-</td>
+      <td>10/10 pkt</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>
+        Zaimplementować jeden wybrany przez siebie algorytm (alg. Hu, Coffmana-Grahama, Brucker).
+      </td>
+      <td>28.05.2018</td>
+      <td>
+        <h4>10 pkt:</h4>
         <ul>
           <li>7 pkt (poprawny program w trybie tekstowym)</li>
           <li>3 pkt (wizualizacja)</li>
