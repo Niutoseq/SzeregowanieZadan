@@ -7,7 +7,7 @@ Repozytorium do przechowywania plików na potrzeby przedmiotu Szeregowanie Zada�
 
 | Imię i nazwisko | Nr indeksu | Grupa | Oddanych zadań | Uzyskane punkty |
 |-----------------|------------|-------|----------------|-----------------|
-| Mariusz Mazepa  | 235371     | 2     | 2/3            | 18/30 pkt       |
+| Mariusz Mazepa  | 235371     | 2     | 2/4            | 18/40 pkt       |
 
 ## Laboratorium
 
@@ -71,7 +71,19 @@ Repozytorium do przechowywania plików na potrzeby przedmiotu Szeregowanie Zada�
       <td></td>
     </tr>
     <tr>
+      <td>4</td>
+      <td>
+        Zaimplementować zmodyfikowany algorytm Johnsona.
+      </td>
+      <td>30.05.2018</td>
+      <td>
+        <h4>10 pkt:</h4>
+      </td>
+      <td>-</td>
+      <td></td>
+    </tr>
+    <tr>
       <td colspan="5">Łącznie</td>
-      <td>18/30 pkt</td>
+      <td>18/40 pkt</td>
     </tr>
 </table>
