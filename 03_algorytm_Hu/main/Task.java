@@ -1,11 +1,10 @@
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Task
 {
   private int taskNumber;               // numer zadania
   private int duration;                 // czas trwania
-  private int startTime;                // czas rozpoczęcia (w harmonogramie)
-  private int finishTime;               // czas zakończenia (w harmonogramie)
   private int level;                    // poziom zadania
   private ArrayList<Task> prevTasks;    // zadania, na które oczekuje obecne
   private ArrayList<Task> nextTasks;    // zadania oczekujące na obecne
@@ -16,15 +15,12 @@ public class Task
     super();
   }
 
-  public Task(int taskNumber, int duration, int startTime, int finishTime,
-              int level, ArrayList<Task> prevTasks, ArrayList<Task> nextTasks,
-              Boolean isCompleted)
+  public Task(int taskNumber, int duration, int level, ArrayList<Task> prevTasks,
+              ArrayList<Task> nextTasks, Boolean isCompleted)
   {
     super();
     this.taskNumber = taskNumber;
     this.duration = duration;
-    this.startTime = startTime;
-    this.finishTime = finishTime;
     this.level = level;
     this.prevTasks = prevTasks;
     this.nextTasks = nextTasks;
@@ -49,24 +45,6 @@ public class Task
     this.duration = duration;
   }
 
-  public int getStartTime()
-  {
-    return startTime;
-  }
-  public void setStartTime(int startTime)
-  {
-    this.startTime = startTime;
-  }
-
-  public int getFinishTime()
-  {
-    return finishTime;
-  }
-  public void setFinishTime(int finishTime)
-  {
-    this.finishTime = finishTime;
-  }
-
   public int getLevel()
   {
     return level;
@@ -75,6 +53,15 @@ public class Task
   {
     this.level = level;
   }
+  public static Comparator<Task> compareLevels = new Comparator<Task>()
+  {
+    public int compare(Task task1, Task task2)
+    {
+      int lvl1 = task1.getLevel();
+      int lvl2 = task2.getLevel();
+      return lvl2 - lvl1;
+    }
+  };
 
   public ArrayList<Task> getPrevTasks()
   {

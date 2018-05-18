@@ -22,5 +22,5 @@ if [ ! -e $graphicOutDir ]; then
   mkdir $graphicOutDir
 fi
 
-javac -d class main/App.java main/Task.java main/TaskManager.java main/Machine.java main/MachineManager.java main/Graphic.java
+javac -d class main/App.java main/Task.java main/TaskManager.java main/Machine.java main/MachineManager.java main/Graphic.java main/DataFromFile.java
 echo "Done!"

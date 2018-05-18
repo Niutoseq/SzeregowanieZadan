@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.io.FileReader;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -8,6 +7,9 @@ public class Graphic
 {
   public static TaskManager tm = new TaskManager();
   public static MachineManager mm = new MachineManager();
+
+  public static String color1 = "midnightblue";
+  public static String color2 = "lightsteelblue";
 
   public static void makeGraphic(String whichOne)
   {
@@ -57,7 +59,7 @@ public class Graphic
     for (Task task : tasksToGraph)
     {
       body = body + "  \"" + tm.globalTaskName + task.getTaskNumber()
-        + "\" [color=darkgreen style=filled fillcolor=palegreen];\n";
+        + "\" [color=" + color1 + " style=filled fillcolor=" + color2 + "];\n";
 
       if(!task.getNextTasks().isEmpty())
       {
@@ -65,7 +67,7 @@ public class Graphic
         {
           body = body + "  \"" + tm.globalTaskName + task.getTaskNumber() + "\""
             + " -> " + "\"" + tm.globalTaskName + nextTask.getTaskNumber() + "\""
-            + " [color=black style=filled fillcolor=green3];\n";
+            + " [color=black style=filled fillcolor=" + color1 + "];\n";
         }
       }
     }
@@ -92,8 +94,8 @@ public class Graphic
     String result = new String();
     String end = "}";
 
-    result = result + "struct1 [shape=record, color=darkgreen,";
-    result = result + " style=filled, fillcolor=palegreen, label=\"";
+    result = result + "struct1 [shape=record, color=" + color1 + ",";
+    result = result + " style=filled, fillcolor=" + color2 + ", label=\"";
 
     int time = 0;
     int longestSchedule = 0;
@@ -112,7 +114,7 @@ public class Graphic
 
     for (int i = 0; i < longestSchedule; i++)
     {
-      result = result + time + "-" + (time+1) + "|";
+      result = result + time*tm.globalTaskDuration + "-" + (time+1)*tm.globalTaskDuration + "|";
       for (Machine machine : mm.machines)
       {
         if (machine.getSchedule().get(i).getTaskNumber() == 0)

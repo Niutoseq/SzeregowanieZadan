@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class MachineManager
 {
@@ -43,10 +44,6 @@ public class MachineManager
   {
     System.out.println("SCHEME:");
     System.out.println("[Machine " + globalMachineName + "<num>] <schedule>");
-    // for (int i = 0; i < globalMachineName.length(); i++)
-    // {
-    //   System.out.print(" ");
-    // }
     System.out.print("\n");
   }
 
@@ -104,18 +101,18 @@ public class MachineManager
         }
       }
 
+      Collections.sort(tasksWithNoPrevs, Task.compareLevels);
+
       if (tasksWithNoPrevs.size() <= machines.size())
       {
-        // System.out.println(time + ": Less or equals...");
         tasksToProceed = tasksWithNoPrevs;
         while (tasksToProceed.size() < machines.size())
         {
-          tasksToProceed.add(new Task(0, tm.globalTaskDuration, 0, 0, 0, new ArrayList<Task>(), new ArrayList<Task>(), false));
+          tasksToProceed.add(new Task(0, tm.globalTaskDuration, 0, new ArrayList<Task>(), new ArrayList<Task>(), false));
         }
       }
       else
       {
-        // System.out.println(time + ": More and more...");
         for (int i = 0; i < machines.size(); i++)
         {
           tasksToProceed.add(i, tasksWithNoPrevs.get(i));

@@ -76,8 +76,6 @@ public class TaskManager
     {
       System.out.print("[Task " + globalTaskName + task.getTaskNumber() + "]");
       System.out.print(" " + task.getDuration() + ",");
-      // System.out.print(" " + task.getStartTime() + ",");
-      // System.out.print(" " + task.getFinishTime() + ",");
       System.out.print(" " + task.getLevel() + ",");
       System.out.print(" ");
       displayConnTaskList(task.getPrevTasks());
@@ -85,30 +83,6 @@ public class TaskManager
       System.out.print(" ");
       displayConnTaskList(task.getNextTasks());
       System.out.print("\n");
-    }
-  }
-
-  public static void calculateTimes()
-  {
-    for (Machine machine : mm.machines)
-    {
-      for (Task scheduleTask : machine.getSchedule())
-      {
-        if (scheduleTask.getPrevTasks().isEmpty())
-        {
-          scheduleTask.setStartTime(0);
-          scheduleTask.setFinishTime(scheduleTask.getStartTime() + scheduleTask.getDuration());
-
-          for (Task task : tasks)
-          {
-            if (task.getTaskNumber() == scheduleTask.getTaskNumber())
-            {
-              task = scheduleTask;
-              System.out.println(task.getTaskNumber());
-            }
-          }
-        }
-      }
     }
   }
 
