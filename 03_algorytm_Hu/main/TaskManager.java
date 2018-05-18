@@ -4,6 +4,7 @@ import java.util.Collections;
 public class TaskManager
 {
   public static ArrayList<Task> tasks = new ArrayList<Task>();
+  public static MachineManager mm = new MachineManager();
   public static String globalTaskName = "Z";
   public static int globalTaskDuration = 1;
 
@@ -58,7 +59,7 @@ public class TaskManager
   public static void displayTasksScheme()
   {
     System.out.println("SCHEME:");
-    System.out.println("[Task " + globalTaskName + "<num>] <duration>, <start>. <finish>, <level>,");
+    System.out.println("[Task " + globalTaskName + "<num>] <duration>, <level>,");
     for (int i = 0; i < globalTaskName.length(); i++)
     {
       System.out.print(" ");
@@ -75,8 +76,8 @@ public class TaskManager
     {
       System.out.print("[Task " + globalTaskName + task.getTaskNumber() + "]");
       System.out.print(" " + task.getDuration() + ",");
-      System.out.print(" " + task.getStartTime() + ",");
-      System.out.print(" " + task.getFinishTime() + ",");
+      // System.out.print(" " + task.getStartTime() + ",");
+      // System.out.print(" " + task.getFinishTime() + ",");
       System.out.print(" " + task.getLevel() + ",");
       System.out.print(" ");
       displayConnTaskList(task.getPrevTasks());
@@ -87,28 +88,29 @@ public class TaskManager
     }
   }
 
-  // public static void calculateTimes()
-  // {
-  //   for (Task task : tasks)
-  //   {
-  //     if (task.getPrevTasks().isEmpty())
-  //     {
-  //       task.setFinishTime(0);
-  //       // System.out.println("EMPTY: " + task.getTaskNumber());
-  //     }
-  //     else
-  //     {
-  //       for (Task prevTask : task.getPrevTasks())
-  //       {
-  //         if (task.getFinishTime() <= prevTask.getFinishTime())
-  //         {
-  //           // System.out.println(task.getFinishTime() + "___" + prevTask.getFinishTime());
-  //           task.setFinishTime(prevTask.getFinishTime() + task.getDuration());
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
+  public static void calculateTimes()
+  {
+    for (Machine machine : mm.machines)
+    {
+      for (Task scheduleTask : machine.getSchedule())
+      {
+        if (scheduleTask.getPrevTasks().isEmpty())
+        {
+          scheduleTask.setStartTime(0);
+          scheduleTask.setFinishTime(scheduleTask.getStartTime() + scheduleTask.getDuration());
+
+          for (Task task : tasks)
+          {
+            if (task.getTaskNumber() == scheduleTask.getTaskNumber())
+            {
+              task = scheduleTask;
+              System.out.println(task.getTaskNumber());
+            }
+          }
+        }
+      }
+    }
+  }
 
   public static void setLevels()
   {

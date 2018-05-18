@@ -4,6 +4,7 @@ public class App
 {
   public static TaskManager tm = new TaskManager();
   public static MachineManager mm = new MachineManager();
+  public static Graphic graphic = new Graphic();
 
   public static void clearScreen()
   {
@@ -45,6 +46,11 @@ public class App
     int tasksNumber = 12;             // liczba zadań do wykonania
     int machinesNumber = 3;           // liczba dostępnych maszyn
 
+    if (tasksNumber <= 0 || machinesNumber <= 0)
+    {
+      closeApp("Błąd! Liczba zadań/maszyn musi wynosić co najmniej 1!");
+    }
+
     for (int i = 1; i <= tasksNumber; i++)
     {
       tm.addTask(new Task(i, tm.globalTaskDuration, 0, 0, 0, new ArrayList<Task>(), new ArrayList<Task>(), false));
@@ -67,7 +73,9 @@ public class App
     tm.addConnection(10, 12);
     tm.addConnection(11, 12);
 
-    // tm.calculateTimes();
+    graphic.makeGraphic("graph");
+
+    tm.calculateTimes();
     tm.setLevels();
 
     tm.displayAllTasks();
@@ -75,6 +83,8 @@ public class App
 
     mm.prepareSchedules();
     mm.displayAllMachines();
+
+    graphic.makeGraphic("schedule");
     newLines(1);
   }
 }

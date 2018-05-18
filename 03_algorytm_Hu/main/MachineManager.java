@@ -69,7 +69,7 @@ public class MachineManager
     for (int i = 1; i <= longestSchedule; i++)
     {
       String numberToDisplay = new String();
-      numberToDisplay = numberToDisplay + i;
+      numberToDisplay = numberToDisplay + i * (tm.globalTaskDuration);
       while (numberToDisplay.length() < tm.globalTaskName.length() + 2)
       {
         numberToDisplay = " " + numberToDisplay;
