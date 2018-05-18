@@ -77,7 +77,7 @@ Repozytorium do przechowywania plik√≥w na potrzeby przedmiotu Szeregowanie Zada≈
       </td>
       <td>30.05.2018</td>
       <td>
-        <h4>10 pkt:</h4>
+        <h4>10 pkt</h4>
       </td>
       <td>-</td>
       <td></td>
