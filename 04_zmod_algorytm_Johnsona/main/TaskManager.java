@@ -127,6 +127,10 @@ public class TaskManager
     }
 
     time = 0;
+    // UWAGA!!!
+    // ---------------------------------------------
+    // na trzeciej maszynie czasami zadania nachodzą
+    // na te same na innych maszynach - poprawić !!!
     for (Task task : schedule)
     {
       for (int i = 0; i < task.getDurations().get(2); i++)
