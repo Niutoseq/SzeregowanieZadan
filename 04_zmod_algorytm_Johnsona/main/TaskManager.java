@@ -127,10 +127,6 @@ public class TaskManager
     }
 
     time = 0;
-    // UWAGA!!!
-    // ---------------------------------------------
-    // na trzeciej maszynie czasami zadania nachodzą
-    // na te same na innych maszynach - poprawić !!!
     for (Task task : schedule)
     {
       for (int i = 0; i < task.getDurations().get(2); i++)
@@ -152,8 +148,9 @@ public class TaskManager
         }
         else
         {
-          mm.machines.get(2).getSchedule().add(task);
-          time++;
+          mm.machines.get(0).getSchedule().add(new Task(0, new ArrayList<Integer>(), 0, 0, new Collection()));
+          mm.machines.get(1).getSchedule().add(new Task(0, new ArrayList<Integer>(), 0, 0, new Collection()));
+          i--;
         }
       }
     }
@@ -172,6 +169,21 @@ public class TaskManager
       while (machine.getSchedule().size() < longestSchedule)
       {
         machine.getSchedule().add(new Task(0, new ArrayList<Integer>(), 0, 0, new Collection()));
+      }
+    }
+
+    for (int i = 0; i < longestSchedule; i++)
+    {
+      int emptyCounter = 0;
+      if (mm.machines.get(0).getSchedule().get(i).getTaskNumber() == 0) emptyCounter++;
+      if (mm.machines.get(1).getSchedule().get(i).getTaskNumber() == 0) emptyCounter++;
+      if (mm.machines.get(2).getSchedule().get(i).getTaskNumber() == 0) emptyCounter++;
+
+      if (emptyCounter == 3)
+      {
+        mm.machines.get(0).getSchedule().remove(i);
+        mm.machines.get(1).getSchedule().remove(i);
+        mm.machines.get(2).getSchedule().remove(i);
       }
     }
   }
