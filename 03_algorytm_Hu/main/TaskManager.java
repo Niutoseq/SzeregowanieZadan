@@ -7,6 +7,7 @@ public class TaskManager
   public static MachineManager mm = new MachineManager();
   public static String globalTaskName = "Z";
   public static int globalTaskDuration = 1;
+  public static String inOrOutTree = new String();
 
   public static void addTask(Task task)
   {
@@ -21,8 +22,8 @@ public class TaskManager
     if (task1.getTaskNumber() == task2.getTaskNumber())
       App.closeApp("[Task" + task1.getTaskNumber() + "]: Nie można utworzyć powiązania zadania z samym sobą!");
 
-    if (task1.getTaskNumber() > task2.getTaskNumber())
-      App.closeApp("[Task" + task1.getTaskNumber() + "]: Zadanie o numerze wyższym nie może poprzedzać numeru niższego!");
+    // if (task1.getTaskNumber() > task2.getTaskNumber())
+    //   App.closeApp("[Task" + task1.getTaskNumber() + "]: Zadanie o numerze wyższym nie może poprzedzać numeru niższego!");
 
     if (tasks.contains(task1) && tasks.contains(task2))
     {
@@ -88,19 +89,58 @@ public class TaskManager
 
   public static void setLevels()
   {
+    for (Task task : tasks)
+    {
+      task.setLevel(0);
+    }
+
     Collections.reverse(tasks);
     for (Task task : tasks)
     {
-      if (task.getNextTasks().isEmpty())
+      if (inOrOutTree == "out-tree")
       {
-        task.setLevel(1);
+        Collections.reverse(tasks);
+        if (task.getPrevTasks().isEmpty())
+        {
+          task.setLevel(1);
+        }
+        else
+        {
+          task.setLevel(task.getPrevTasks().get(0).getLevel() + 1);
+        }
+        Collections.reverse(tasks);
       }
       else
       {
-        task.setLevel(task.getNextTasks().get(0).getLevel() + 1);
+        if (task.getNextTasks().isEmpty())
+        {
+          task.setLevel(1);
+        }
+        else
+        {
+          task.setLevel(task.getNextTasks().get(0).getLevel() + 1);
+        }
       }
     }
     Collections.reverse(tasks);
+
+    int maxLevel = 0;
+    for (Task task : tasks)
+    {
+      if (task.getLevel() > maxLevel) maxLevel = task.getLevel();
+    }
+
+    int minCounter = 0;
+    int maxCounter = 0;
+    for (Task task : tasks)
+    {
+      if (task.getLevel() == 1) minCounter++;
+      if (task.getLevel() == maxLevel) maxCounter++;
+    }
+
+    if (minCounter > maxCounter) inOrOutTree = "out-tree";
+    if (minCounter < maxCounter) inOrOutTree = "in-tree";
+    // System.out.println("NOW IS: [ " + inOrOutTree + " ]\n");
   }
 
   public static Boolean isAllTasksCompleted(ArrayList<Task> tasksToComplete)

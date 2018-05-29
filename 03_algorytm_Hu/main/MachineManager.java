@@ -87,6 +87,29 @@ public class MachineManager
   {
     int time = 0;
 
+    if (tm.inOrOutTree == "out-tree")
+    {
+      for (Task task : tm.tasks)
+      {
+        ArrayList<Task> tmpPrevs = new ArrayList<Task>();
+        if (!task.getPrevTasks().isEmpty())
+        {
+          for (Task prevTask : task.getPrevTasks())
+          {
+            tmpPrevs = task.getPrevTasks();
+            tm.addConnection(task.getTaskNumber(), prevTask.getTaskNumber());
+          }
+          task.setPrevTasks(new ArrayList<Task>());
+          // task.setPrevTasks(new ArrayList<Task>());
+        }
+        task.setNextTasks(tmpPrevs);
+      }
+
+      tm.setLevels();
+      // tm.displayAllTasks();
+      System.out.print("\n");
+    }
+
     while (!tm.isAllTasksCompleted(tm.tasks))
     {
       int maxLevel = tm.tasks.get(0).getLevel();
@@ -126,6 +149,14 @@ public class MachineManager
         tm.completeTaskByNumber(taskToProceed.getTaskNumber());
       }
       time++;
+    }
+
+    if (tm.inOrOutTree == "out-tree")
+    {
+      for (Machine machine : machines)
+      {
+        Collections.reverse(machine.getSchedule());
+      }
     }
   }
 }
