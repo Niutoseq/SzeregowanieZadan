@@ -1,5 +1,4 @@
-ilosc_maszyn 3
-numer_zadania czasy_wykonania[tyle_ile_maszyn]
+numer_zadania czasy_wykonania[tyle_ile_maszyn_-_3]
 1 4 1 3
 2 3 3 5
 3 5 2 4

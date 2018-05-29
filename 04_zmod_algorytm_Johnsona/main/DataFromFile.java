@@ -49,28 +49,28 @@ public class DataFromFile
         tasksFromFile.add(splitResult);
       }
 
-      int machinesNumber = Integer.parseInt(tasksFromFile.get(0).get(1));
-      if (machinesNumber <= 0)
+      if (tasksFromFile.size() == 1)
       {
-        App.closeApp("Błąd! Liczba maszyn musi wynosić co najmniej 1!");
+        App.closeApp("Plik " + filename + " nie zawiera danych!");
       }
 
+      int machinesNumber = 3;
       for (int i = 0; i < machinesNumber; i++)
       {
         mm.addMachine(new Machine((i+1), new ArrayList<Task>()));
       }
 
-      for (int i = 2; i < tasksFromFile.size(); i++)
+      for (int i = 1; i < tasksFromFile.size(); i++)
       {
         int taskNumber = Integer.parseInt(tasksFromFile.get(i).get(0));
-        if(taskNumber > tasksFromFile.size() - 2)
+        if(taskNumber > tasksFromFile.size() - 1)
         {
           App.closeApp("Error: Numeruj zadania po kolei, nie pomijaj numerów.");
         }
         tm.addTask(new Task(taskNumber, new ArrayList<Integer>(), 0, 0, new Collection()));
       }
 
-      for (int i = 2; i < tasksFromFile.size(); i++)
+      for (int i = 1; i < tasksFromFile.size(); i++)
       {
         if (tasksFromFile.get(i).size() < mm.machines.size() + 1)
         {

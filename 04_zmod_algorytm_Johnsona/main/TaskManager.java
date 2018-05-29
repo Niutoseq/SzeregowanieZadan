@@ -155,12 +155,34 @@ public class TaskManager
       }
     }
 
-    int longestSchedule = 0;
     for (Machine machine : mm.machines)
     {
-      if (longestSchedule < machine.getSchedule().size())
+      for (Task task : machine.getSchedule())
       {
-        longestSchedule = machine.getSchedule().size();
+        if (task.getTaskNumber() == 0)
+        {
+          ArrayList<Integer> durations = new ArrayList<Integer>();
+          durations.add(1);
+          durations.add(1);
+          durations.add(1);
+          task.setDurations(durations);
+        }
+      }
+    }
+
+    int longestSchedule = 0;
+
+    for (Machine machine : mm.machines)
+    {
+      int currentSchedule = 0;
+      for (Task task : machine.getSchedule())
+      {
+        currentSchedule = currentSchedule + task.getDurations().get(machine.getMachineNumber()-1);
+      }
+
+      if (currentSchedule > longestSchedule)
+      {
+        longestSchedule = currentSchedule;
       }
     }
 
@@ -175,6 +197,7 @@ public class TaskManager
     for (int i = 0; i < longestSchedule; i++)
     {
       int emptyCounter = 0;
+
       if (mm.machines.get(0).getSchedule().get(i).getTaskNumber() == 0) emptyCounter++;
       if (mm.machines.get(1).getSchedule().get(i).getTaskNumber() == 0) emptyCounter++;
       if (mm.machines.get(2).getSchedule().get(i).getTaskNumber() == 0) emptyCounter++;
@@ -184,6 +207,8 @@ public class TaskManager
         mm.machines.get(0).getSchedule().remove(i);
         mm.machines.get(1).getSchedule().remove(i);
         mm.machines.get(2).getSchedule().remove(i);
+        longestSchedule--;
+        i--;
       }
     }
   }

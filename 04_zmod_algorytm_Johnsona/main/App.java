@@ -59,6 +59,7 @@ public class App
     newLines(1);
     mm.displayAllMachines();
     newLines(1);
+    mm.compressSchedules();
     graphic.makeSchedule();
   }
 }

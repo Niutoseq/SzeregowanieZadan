@@ -8,8 +8,11 @@ public class Graphic
   public static TaskManager tm = new TaskManager();
   public static MachineManager mm = new MachineManager();
 
-  public static String color1 = "firebrick";
-  public static String color2 = "rosybrown1";
+  public static String color1 = "indigo";         // kolor obramowania
+  public static String color2 = "lemonchiffon";   // kolor komórek z zadaniami
+  public static String color3 = "orchid";         // kolor nagłówka z czasem
+  public static String color4 = "plum";           // kolor kolumny z maszynami
+  public static String color5 = "bisque3";        // kolor blanków (przestojów)
 
   public static void makeSchedule()
   {
@@ -40,50 +43,60 @@ public class Graphic
   public static void prepareSchedule(ArrayList<Machine> machinesToShedule)
   {
     String mySchedule = new String();
-    String begin = "digraph struct {\n";
-    begin = begin + "node [shape=record];\n";
+
+    String begin = "digraph H {\n";
     String body = new String();
     String result = new String();
     String end = "}";
 
-    result = result + "struct1 [shape=record, color=" + color1 + ",";
-    result = result + " style=filled, fillcolor=" + color2 + ", label=\"";
+    result = result + "aHtmlTable [shape=plaintext label=<\n";
 
-    int time = 0;
     int longestSchedule = 0;
 
-    result = result + "{Time|";
     for (Machine machine : mm.machines)
     {
-      result = result + mm.globalMachineName + machine.getMachineNumber() + "|";
-      if (machine.getSchedule().size() > longestSchedule)
+      int currentSchedule = 0;
+      for (Task task : machine.getSchedule())
       {
-        longestSchedule = machine.getSchedule().size();
+        currentSchedule = currentSchedule + task.getDurations().get(machine.getMachineNumber()-1);
+      }
+
+      if (currentSchedule > longestSchedule)
+      {
+        longestSchedule = currentSchedule;
       }
     }
-    result = result.substring(0, result.length() - 1);
-    result = result + "}|{";
+
+    result = result + "<table border='1' cellborder='1' color='" + color1 + "' bgcolor='" + color2 + "' cellspacing='0'>\n";
+    result = result + "<tr>\n";
+    result = result + "<td bgcolor='" + color3 + "'>Time</td>\n";
 
     for (int i = 0; i < longestSchedule; i++)
     {
-      result = result + time + "-" + (time+1) + "|";
-      for (Machine machine : mm.machines)
+      result = result + "<td width='40px' bgcolor='" + color3 + "'>" + i + "-" + (i+1) + "</td>\n";
+    }
+    result = result + "</tr>\n";
+
+    for (Machine machine : mm.machines)
+    {
+      result = result + "<tr>\n";
+      result = result + "<td bgcolor='" + color4 + "'>" + mm.globalMachineName + machine.getMachineNumber() + "</td>\n";
+      for (Task task : machine.getSchedule())
       {
-        if (machine.getSchedule().get(i).getTaskNumber() == 0)
+        if (task.getTaskNumber() == 0)
         {
-          result = result + "-" + "|";
+          result = result + "<td bgcolor='" + color5 + "' colspan='" + task.getDurations().get(machine.getMachineNumber()-1) + "'>-</td>\n";
         }
         else
         {
-          result = result + tm.globalTaskName + machine.getSchedule().get(i).getTaskNumber() + "|";
+          result = result + "<td colspan='" + task.getDurations().get(machine.getMachineNumber()-1) + "'>" + tm.globalTaskName + task.getTaskNumber() + "</td>\n";
         }
       }
-      result = result.substring(0, result.length() - 1);
-      result = result + "}|{";
-      time++;
+      result = result + "</tr>\n";
     }
-    result = result.substring(0, result.length() - 2);
-    result = result + "\"];\n";
+
+    result = result + "</table>\n>];\n";
+
     body = result;
     mySchedule = begin + body + end;
     // System.out.println(mySchedule);

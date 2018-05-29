@@ -61,4 +61,42 @@ public class MachineManager
       System.out.print("\n");
     }
   }
+
+  public static void compressSchedules()
+  {
+    for (Machine machine : machines)
+    {
+      for (Task task : machine.getSchedule())
+      {
+        if (task.getTaskNumber() == 0)
+        {
+          ArrayList<Integer> durations = new ArrayList<Integer>();
+          durations.add(1);
+          durations.add(1);
+          durations.add(1);
+          task.setDurations(durations);
+        }
+      }
+    }
+
+    for (Machine machine : machines)
+    {
+      for (int i = 0; i < machine.getSchedule().size() - 1; i++)
+      {
+        if (machine.getSchedule().get(i).getTaskNumber() == machine.getSchedule().get(i+1).getTaskNumber())
+        {
+          if (machine.getSchedule().get(i).getTaskNumber() == 0)
+          {
+            ArrayList<Integer> durations = new ArrayList<Integer>();
+            durations.add(machine.getSchedule().get(i).getDurations().get(machine.getMachineNumber()-1)+1);
+            durations.add(machine.getSchedule().get(i).getDurations().get(machine.getMachineNumber()-1)+1);
+            durations.add(machine.getSchedule().get(i).getDurations().get(machine.getMachineNumber()-1)+1);
+            machine.getSchedule().get(i).setDurations(durations);
+          }
+          machine.getSchedule().remove(i+1);
+          i--;
+        }
+      }
+    }
+  }
 }
