@@ -90,6 +90,11 @@ public class DataFromFile
             durations.add(duration);
           }
           tm.tasks.get(taskNumber-1).setDurations(durations);
+
+          if (durations.get(0) < durations.get(1) && durations.get(2) < durations.get(1))
+          {
+            App.closeApp("Maszyna druga nie może zdominować pozostałych!");
+          }
         }
       }
     }
