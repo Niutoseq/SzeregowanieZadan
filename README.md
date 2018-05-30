@@ -7,7 +7,7 @@ Repozytorium do przechowywania plików na potrzeby przedmiotu Szeregowanie Zada�
 
 | Imię i nazwisko | Nr indeksu | Grupa | Oddanych zadań | Uzyskane punkty |
 |-----------------|------------|-------|----------------|-----------------|
-| Mariusz Mazepa  | 235371     | 2     | 3/4            | 36/40 pkt       |
+| Mariusz Mazepa  | 235371     | 2     | 4/4            | 36/40 pkt       |
 
 ## Laboratorium
 
